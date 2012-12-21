@@ -2591,6 +2591,11 @@ sub pause_curation : Chained('top') Args(0)
   _redirect_and_detach($c);
 }
 
+sub reassign_session : Chainged('top') Args(0)
+{
+  ...;
+}
+
 sub curation_paused : Chained('top') Args(0)
 {
   my ($self, $c) = @_;
