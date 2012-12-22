@@ -52,7 +52,6 @@ $(document).ready(function() {
         // A user has logged in! Here you need to:
         // 1. Send the assertion to your backend for verification and to create a session.
         // 2. Update your UI.
-        alert('login');
         $.ajax({
           type: 'POST',
           url: $('#curs-login').attr('href'),
@@ -70,7 +69,6 @@ $(document).ready(function() {
         // Tear down the user's session by redirecting the user or making a call to your backend.
         // Also, make that loggedInUser will get set to null on the next page load.
         // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
-        alert('logout: ' + logged_in_user);
         $.ajax({
           type: 'POST',
           url: $('#curs-logout').attr('href'),
