@@ -86,17 +86,16 @@ $(document).ready(function() {
   };
 
   $('#curs-login').click(function() {
-    set_watch();
     navigator.id.request();
     return false;
   });
 
   $('#curs-logout').click(function() {
-    set_watch();
     navigator.id.logout();
     return false;
   });
 
+  set_watch();
 });
 
 function make_ontology_complete_url(annotation_type) {
