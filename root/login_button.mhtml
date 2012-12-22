@@ -1,8 +1,8 @@
 % if ($c->user_exists()) {
-  <a href="<% $c->uri_for('/logout') %>">Logout</a>
+  <a id="curs-logout" href="<% $c->uri_for('/logout') %>">Logout</a>
 % } else {
 %   if ($local_path !~ m:/account|/login:) {
-  <a href="<% $c->uri_for('/account', { return_path => $return_path_uri }) %>">
+  <a id="curs-login" href="<% $login_uri %>">
     Log in
   </a>
 %   } else {
@@ -13,4 +13,11 @@
 my $local_path = $c->local_path();
 my $return_path_uri =
   $c->uri_for($local_path, $c->req()->params());
+my $login_uri;
+
+if (0 && $c->debug()) {
+  $login_uri = $c->uri_for('/account', { return_path => $return_path_uri });
+} else {
+  $login_uri = $c->uri_for('/persona_login');
+}
 </%init>

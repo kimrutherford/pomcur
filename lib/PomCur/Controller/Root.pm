@@ -98,6 +98,27 @@ sub account :Global
   $st->{return_path} = $c->req()->param("return_path");
 }
 
+=head2 persona_login
+
+ Login using persona assertion
+
+=cut
+sub persona_login :Global {
+  my ($self, $c) = @_;
+  my $email_address = 'kmr@aska.gen.nz';
+
+  my $result;
+  if ($c->authenticate({email_address => $email_address})) {
+    $result = 'success';
+  } else {
+    $result = 'fail';
+  }
+  $c->stash->{json_data} = {
+    result => $result,
+  };
+  $c->forward('View::JSON');
+}
+
 =head2 login
 
  Try to authenticate a user based on email_address and password parameters
@@ -105,6 +126,7 @@ sub account :Global
 =cut
 sub login : Global {
   my ( $self, $c ) = @_;
+
   my $email_address = $c->req->param('email_address');
   my $password = $c->req->param('password');
 

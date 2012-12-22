@@ -18,18 +18,6 @@ public_mode: 0
 
 extra_css: ~
 
-authentication:
-  default_realm: 'members'
-  realms:
-    members:
-      credential:
-        class: 'Password'
-        password_field: 'password'
-        password_type: 'clear'
-      store:
-        class: DBIx::Class
-        user_class: TrackModel::Person
-
 view_options:
   max_inline_results_length: 1000
 

@@ -44,6 +44,61 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function() {
+  function set_watch() {
+    navigator.id.watch({
+      loggedInUser: logged_in_user,
+      onlogin: function(assertion) {
+        // A user has logged in! Here you need to:
+        // 1. Send the assertion to your backend for verification and to create a session.
+        // 2. Update your UI.
+        alert('login');
+        $.ajax({
+          type: 'POST',
+          url: $('#curs-login').attr('href'),
+          data: { assertion: assertion },
+          success: function(res, status, xhr) {
+            window.location.reload(); 
+          },
+          error: function(res, status, xhr) {
+            alert("login failure: HTTP " + res.status);
+          }
+        });
+      },
+      onlogout: function() {
+        // A user has logged out! Here you need to:
+        // Tear down the user's session by redirecting the user or making a call to your backend.
+        // Also, make that loggedInUser will get set to null on the next page load.
+        // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
+        alert('logout: ' + logged_in_user);
+        $.ajax({
+          type: 'POST',
+          url: $('#curs-logout').attr('href'),
+          success: function(res, status, xhr) {
+            window.location.reload();
+          },
+          error: function(res, status, xhr) {
+            alert("logout failure: HTTP " + res.status);
+          }
+        });
+      }
+    });
+  };
+
+  $('#curs-login').click(function() {
+    set_watch();
+    navigator.id.request();
+    return false;
+  });
+
+  $('#curs-logout').click(function() {
+    set_watch();
+    navigator.id.logout();
+    return false;
+  });
+
+});
+
 function make_ontology_complete_url(annotation_type) {
   return application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
 }

@@ -11,6 +11,7 @@ use parent qw/Catalyst/;
 use Catalyst qw/ConfigLoader
                 StackTrace
                 Authentication
+                Authentication::Credential::NoPassword
                 Authorization::Roles
                 Authorization::ACL
                 Session
@@ -48,6 +49,18 @@ __PACKAGE__->config(name => 'PomCur',
                         'static'
                       ],
                     },
+                    'Plugin::Authentication' => {
+                      default_realm => 'persona',
+                      persona => {
+                        credential => {
+                          class => 'NoPassword',
+                        },
+                        store => {
+                          class => 'DBIx::Class',
+                          user_class => 'TrackModel::Person',
+                        },
+                      },
+                    }
                    );
 
 
@@ -80,6 +93,7 @@ __PACKAGE__->deny_access_unless(
 __PACKAGE__->allow_access('/end');
 __PACKAGE__->allow_access('/account');
 __PACKAGE__->allow_access('/login');
+__PACKAGE__->allow_access('/persona_login');
 __PACKAGE__->allow_access('/curs');
 __PACKAGE__->allow_access('/ws');
 __PACKAGE__->allow_access('/tools/pubmed_id_start');

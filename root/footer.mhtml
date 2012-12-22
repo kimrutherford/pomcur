@@ -13,6 +13,12 @@
 
 <script language="javascript" type="text/javascript">
 var application_root = '<% $c->uri_for('/') %>';
+var logged_in_user;
+
+% if ($c->user_exists()) {
+  logged_in_user = '<% $c->user()->email_address() %>';
+% }
+
 </script>
 
 % if ($c->debug()) {
@@ -24,6 +30,7 @@ var application_root = '<% $c->uri_for('/') %>';
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script src="http://ajax.microsoft.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 % }
+<script src="https://login.persona.org/include.js"></script>
 <script src="<% $c->uri_for('/static/js/jquery.ba-bbq.min.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>
