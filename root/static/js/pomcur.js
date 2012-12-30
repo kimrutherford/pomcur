@@ -626,6 +626,14 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/reassign_session';
   });
 
+  $('.curs-assign').click(function () {
+    window.location.href = curs_root_uri + '/assign_session';
+  });
+
+  $('.curs-reassign').click(function () {
+    window.location.href = curs_root_uri + '/reassign_session';
+  });
+
   $('#curs-check-completed').click(function () {
     window.location.href = curs_root_uri + '/complete_approval';
   });
