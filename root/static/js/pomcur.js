@@ -55,13 +55,11 @@ $(document).ready(function() {
         $.ajax({
           type: 'POST',
           url: $('#curs-login').attr('href'),
-          data: { assertion: assertion },
-          success: function(res, status, xhr) {
-            window.location.reload(); 
-          },
-          error: function(res, status, xhr) {
-            alert("login failure: HTTP " + res.status);
-          }
+          data: { assertion: assertion }
+        }).done(function(resp) {
+          window.location.reload(); 
+        }).fail(function(req, status, err) {
+          alert("Failed to login using Mozilla Person: " + err);
         });
       },
       onlogout: function() {

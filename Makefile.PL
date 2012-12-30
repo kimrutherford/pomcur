@@ -38,6 +38,7 @@ requires 'MooseX::Role::Parameterized';
 requires 'Params::Validate';
 requires 'XML::Simple';
 requires 'LWP::Simple';
+requires 'HTTP::Request::Common';
 requires 'Plack';
 requires 'Plack::Middleware::ReverseProxy';
 requires 'Plack::Middleware::Debug';

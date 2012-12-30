@@ -4,6 +4,10 @@ use strict;
 use warnings;
 use parent 'Catalyst::Controller';
 
+use HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
+use JSON;
+
 __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
@@ -105,17 +109,36 @@ sub account :Global
 =cut
 sub persona_login :Global {
   my ($self, $c) = @_;
-  my $email_address = 'kmr@aska.gen.nz';
+  my $assertion = $c->req()->param("assertion");
 
-  my $result;
-  if ($c->authenticate({email_address => $email_address})) {
-    $result = 'success';
+  my $verifier_url = $c->config()->{persona_verifier_url};
+  my $ua = LWP::UserAgent->new;
+
+  my $post_args = [ assertion => $assertion, audience => $c->uri_for('/') ];
+  my $req = POST $verifier_url, $post_args;
+  my $res = $ua->request($req);
+
+  my $json_data = {};
+
+  if ($res->is_success) {
+    my $content = $res->decoded_content();
+    my $res_decoded = JSON->new()->decode($content);
+    my $email_address = $res_decoded->{email};
+
+    if ($c->authenticate({email_address => $email_address})) {
+      $json_data->{result} = 'success';
+    } else {
+      $json_data->{result} = 'fail';
+      $json_data->{message} = "No such user: $email_address";
+    }
   } else {
-    $result = 'fail';
+    $json_data->{result} = 'fail';
+    $json_data->{message} = "Failed to contact the Persona verifier service: " .
+      $res->status_line;
   }
-  $c->stash->{json_data} = {
-    result => $result,
-  };
+
+  $c->stash->{json_data} = $json_data;
+
   $c->forward('View::JSON');
 }
 
