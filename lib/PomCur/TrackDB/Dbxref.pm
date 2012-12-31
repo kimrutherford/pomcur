@@ -125,12 +125,12 @@ __PACKAGE__->belongs_to(
   "db",
   "PomCur::TrackDB::Db",
   { db_id => "db_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wOD9oovp+bVMAGX3hxGfhw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AABHQYzGy6TbxgLIwOZqTQ
 
 =head2 db_accession
 

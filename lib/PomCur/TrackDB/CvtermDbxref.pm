@@ -105,7 +105,7 @@ __PACKAGE__->belongs_to(
   "cvterm",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "cvterm_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 dbxref
@@ -120,12 +120,12 @@ __PACKAGE__->belongs_to(
   "dbxref",
   "PomCur::TrackDB::Dbxref",
   { dbxref_id => "dbxref_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-15 05:57:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:r689lVI9qn/FCDsiM++BfA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+Yff5+g268KzHiocNEzOGw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

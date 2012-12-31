@@ -124,12 +124,12 @@ __PACKAGE__->belongs_to(
   "organism",
   "PomCur::CursDB::Organism",
   { organism_id => "organism" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-04-22 13:14:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6ikaCdjlKIdLVU0fD8S1KA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0fIgYq+YulJJwm/UPG/Yeg
 
 =head2 direct_annotations
 

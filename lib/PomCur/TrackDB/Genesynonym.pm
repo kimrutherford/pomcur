@@ -80,12 +80,12 @@ __PACKAGE__->belongs_to(
   "gene",
   "PomCur::TrackDB::Gene",
   { gene_id => "gene" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3Tj1PeGbtqd4/M2IHz+XFw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1rkbiKRb2NP84o7izhFWzQ
 
 # alias for Chado compatibility
 sub name
