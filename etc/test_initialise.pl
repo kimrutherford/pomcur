@@ -52,8 +52,6 @@ $config->{data_directory} = $test_util->test_data_dir_full_path();
 
 my %test_cases = %{$config->{test_config}->{test_cases}};
 
-my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $config);
-
 sub make_curs_dbs
 {
   my $config = shift;
@@ -67,26 +65,21 @@ sub make_curs_dbs
 
   my @curs_schemas = ();
 
-  my $process_test_case =
-    sub {
-      for my $curs_config (@$test_case) {
-        my ($curs_schema) =
-          PomCur::TestUtil::make_curs_db($config, $curs_config,
-                                         $trackdb_schema, $load_util);
-        push @curs_schemas, $curs_schema;
-      }
-    };
-
   eval {
-    $trackdb_schema->txn_do($process_test_case);
+    for my $curs_config (@$test_case) {
+      my ($curs_schema) =
+      PomCur::TestUtil::make_curs_db($config, $curs_config,
+                                     $trackdb_schema, $load_util);
+      push @curs_schemas, $curs_schema;
+    }
   };
   if ($@) {
     die "ROLLBACK called: $@\n";
   }
 
-  # wait until the transaction is finished
   map {
-    $metadata_storer->store_counts($config, $_);
+    my $metadata_storer = PomCur::Curs::MetadataStorer->new(config => $config);
+    $metadata_storer->store_counts($_);
   } @curs_schemas;
 }
 
