@@ -133,6 +133,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 curs_curators
+
+Type: has_many
+
+Related object: L<PomCur::TrackDB::CursCurator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "curs_curators",
+  "PomCur::TrackDB::CursCurator",
+  { "foreign.curator" => "self.person_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 lab
 
 Type: belongs_to
@@ -146,10 +161,10 @@ __PACKAGE__->belongs_to(
   "PomCur::TrackDB::Lab",
   { lab_id => "lab" },
   {
-    is_deferrable => 1,
+    is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
   },
 );
 
@@ -195,12 +210,12 @@ __PACKAGE__->belongs_to(
   "role",
   "PomCur::TrackDB::Cvterm",
   { cvterm_id => "role" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07017 @ 2012-03-26 04:28:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:itxL224SFYB29BV2KzlNsA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bc4yTafR27y5gLgG6CKdRA
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 

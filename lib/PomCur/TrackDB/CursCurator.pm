@@ -1,12 +1,12 @@
 use utf8;
-package PomCur::TrackDB::Cvtermprop;
+package PomCur::TrackDB::CursCurator;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-PomCur::TrackDB::Cvtermprop
+PomCur::TrackDB::CursCurator
 
 =cut
 
@@ -18,108 +18,92 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<cvtermprop>
+=head1 TABLE: C<curs_curator>
 
 =cut
 
-__PACKAGE__->table("cvtermprop");
+__PACKAGE__->table("curs_curator");
 
 =head1 ACCESSORS
 
-=head2 cvtermprop_id
+=head2 curs_curator_id
 
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 cvterm_id
+=head2 curs
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 type_id
+=head2 curator
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
-
-=head2 value
-
-  data_type: 'text'
-  default_value: (empty string)
-  is_nullable: 0
-
-=head2 rank
-
-  data_type: 'integer'
-  default_value: 0
   is_nullable: 0
 
 =cut
 
 __PACKAGE__->add_columns(
-  "cvtermprop_id",
+  "curs_curator_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "cvterm_id",
+  "curs",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "type_id",
+  "curator",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "value",
-  { data_type => "text", default_value => "", is_nullable => 0 },
-  "rank",
-  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
 
 =over 4
 
-=item * L</cvtermprop_id>
+=item * L</curs_curator_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("cvtermprop_id");
+__PACKAGE__->set_primary_key("curs_curator_id");
 
 =head1 RELATIONS
 
-=head2 cvterm
+=head2 cur
 
 Type: belongs_to
 
-Related object: L<PomCur::TrackDB::Cvterm>
+Related object: L<PomCur::TrackDB::Curs>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "cvterm",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "cvterm_id" },
+  "cur",
+  "PomCur::TrackDB::Curs",
+  { curs_id => "curs" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 type
+=head2 curator
 
 Type: belongs_to
 
-Related object: L<PomCur::TrackDB::Cvterm>
+Related object: L<PomCur::TrackDB::Person>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "type",
-  "PomCur::TrackDB::Cvterm",
-  { cvterm_id => "type_id" },
+  "curator",
+  "PomCur::TrackDB::Person",
+  { person_id => "curator" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-31 21:59:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:28jY+IXytTpBx9COBBeCDg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UNXL2EJw3B876sPcbSDeHg
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
