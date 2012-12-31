@@ -2609,7 +2609,7 @@ sub _assign_session :Private
 
     $schema->txn_do($add_submitter);
 
-    $self->state()->store_statuses($config, $schema);
+    $self->state()->store_statuses($schema);
 
     _redirect_and_detach($c);
   }
