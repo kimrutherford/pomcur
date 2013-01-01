@@ -76,7 +76,7 @@ __PACKAGE__->set_primary_key("cursprop_id");
 
 =head1 RELATIONS
 
-=head2 cur
+=head2 curs
 
 Type: belongs_to
 
@@ -85,7 +85,7 @@ Related object: L<PomCur::TrackDB::Curs>
 =cut
 
 __PACKAGE__->belongs_to(
-  "cur",
+  "curs",
   "PomCur::TrackDB::Curs",
   { curs_id => "curs" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
