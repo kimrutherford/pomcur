@@ -77,9 +77,16 @@ var ferret_choose = {
 
   fetch_term_detail : function(term_id) {
     ferret_choose.debug("fetching: " + term_id);
+    var show_synonyms_config = annotation_type_config.show_synonyms;
+    var synonyms_flag = 0;
+    if (typeof(show_synonyms_config) !== "undefined") {
+      if (show_synonyms_config === "always") {
+        synonyms_flag = 1;
+      }
+    }
     $.ajax({
       url: ferret_choose.ontology_complete_url,
-      data: { term: term_id, def: 1, children: 1 },
+      data: { term: term_id, def: 1, children: 1, exact_synonyms: synonyms_flag },
       dataType: 'json',
       success: ferret_choose.store_term_data,
       async: false
@@ -286,12 +293,32 @@ var ferret_choose = {
       }
 
       if (ferret_choose.matching_synonym && ferret_choose.term_history.length == 2) {
-        $('#ferret-term-synonym-row').show();
-        $('#ferret-term-synonym').html('<div class="term-synonym">' +
+        $('#ferret-term-matching-synonym-row').show();
+        $('#ferret-term-matching-synonym').html('<div class="term-synonym">' +
                                        ferret_choose.matching_synonym + '</div>');
       } else {
-        $('#ferret-term-synonym-row').hide();
-        $('#ferret-term-synonym').html('');
+        $('#ferret-term-matching-synonym-row').hide();
+        $('#ferret-term-matching-synonym').html('');
+      }
+
+      var synonyms_html = '';
+      var synonyms_count = 0;
+
+      $.each(term.synonyms, function(idx, synonym) {
+        var synonym_name = synonym.name;
+        if (synonym_name !== ferret_choose.matching_synonym) {
+          synonyms_html += '<li>' + synonym_name + '</li>';
+          synonyms_count++;
+        }
+      });
+
+      $('#ferret-term-synonyms-row').remove();
+      if (synonyms_count > 0) {
+        var $new_synonym_row = $('<tr id="ferret-term-synonyms-row">' +
+                                 '<td class="title">Synonym</td>' +
+                                 '<td>' + synonyms_html + '</td></tr>');
+
+        $('#ferret-term-matching-synonym-row').after($new_synonym_row);
       }
 
       ferret_choose.debug("render(): " + term_id + " " + term.name);
@@ -702,7 +729,7 @@ $(document).ready(function() {
 
   $('#pubmed-id-lookup-curate').click(function () {
     var pubmedid = $('#pub-details-uniquename').data('pubmedid');
-    window.location.href = '/tools/start/' + pubmedid;
+    window.location.href = application_root + '/tools/start/' + pubmedid;
   });
 
   $('.non-key-attribute').jTruncate({

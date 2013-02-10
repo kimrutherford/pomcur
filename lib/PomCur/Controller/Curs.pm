@@ -211,7 +211,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval):) {
+      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport):) {
     $use_dispatch = 0;
   }
 
@@ -689,6 +689,23 @@ sub gene_upload : Chained('top') Args(0) Form
   }
 }
 
+sub _delete_annotation : Private
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation_id = shift;
+  my $other_gene_identifier = shift;
+
+  my $annotation = $schema->resultset('Annotation')->find($annotation_id);
+  my $annotation_type_name = $annotation->type();
+  my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
+  if ($annotation_config->{category} eq 'interaction') {
+    PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
+  } else {
+    $annotation->delete();
+  }
+}
+
 sub annotation_delete : Chained('top') PathPart('annotation/delete')
 {
   my ($self, $c, $annotation_id, $other_gene_identifier) = @_;
@@ -700,14 +717,7 @@ sub annotation_delete : Chained('top') PathPart('annotation/delete')
   $self->_check_annotation_exists($c, $annotation_id);
 
   my $delete_sub = sub {
-    my $annotation = $schema->resultset('Annotation')->find($annotation_id);
-    my $annotation_type_name = $annotation->type();
-    my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
-    if ($annotation_config->{category} eq 'interaction') {
-      PomCur::Curs::Utils::delete_interactor($annotation, $other_gene_identifier);
-    } else {
-      $annotation->delete();
-    }
+    _delete_annotation($config, $schema, $annotation_id, $other_gene_identifier);
     $self->metadata_storer()->store_counts($schema);
   };
 
@@ -1233,6 +1243,8 @@ sub _annotation_edit
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type_name};
 
+  $st->{annotation_type_config} = $annotation_config;
+
   my $annotation_display_name = $annotation_config->{display_name};
   my $gene_display_name = $gene_proxy->display_name();
 
@@ -1387,6 +1399,9 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
   my @codes = _generate_evidence_options($evidence_types, $annotation_type_config);
   my $form = $self->form();
 
+  my $form_back_string = '<- Back';
+  my $form_proceed_string = 'Proceed ->';
+
   my @all_elements = (
       {
         name => 'evidence-select',
@@ -1394,7 +1409,17 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
         default => $annotation_data->{evidence_code},
       },
       {
-        name => 'evidence-proceed', type => 'Submit', value => 'Proceed ->',
+        type => 'Block',
+        tag => 'div',
+        attributes => { class => 'clearall', },
+      },
+      {
+        name => 'evidence-submit-back', type => 'Submit', value => $form_back_string,
+        attributes => { class => 'curs-back-button', },
+      },
+      {
+        name => 'evidence-submit-proceed', type => 'Submit', value => $form_proceed_string,
+        attributes => { class => 'curs-finish-button', },
       },
     );
 
@@ -1411,6 +1436,18 @@ sub annotation_evidence : Chained('top') PathPart('annotation/evidence') Args(1)
     if ($evidence_select eq '') {
       $c->flash()->{error} = 'Please choose an evidence type to continue';
       _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    my $evidence_submit_back = $c->req->params->{'evidence-submit-back'};
+    my $evidence_submit_proceed = $c->req->params->{'evidence-submit-proceed'};
+    if (!defined $evidence_submit_proceed && !defined $evidence_submit_back) {
+      _redirect_and_detach($c, 'annotation', 'evidence', $annotation_id);
+    }
+
+    if (defined $evidence_submit_back) {
+      _delete_annotation($config, $schema, $annotation_id);
+      my $gene_id = $gene->gene_id();
+      _redirect_and_detach($c, 'annotation', 'edit', $gene_id, $annotation_type_name);
     }
 
     my $existing_evidence_code = $data->{evidence_code};
@@ -2297,7 +2334,7 @@ sub _get_annotation_table_tsv
        evidence_code with_or_from_identifier
        annotation_type_abbreviation
        gene_product gene_synonyms_string db_object_type taxonid
-       creation_date_short db);
+       creation_date_short assigned_by);
 
   my @interaction_column_names =
     qw(gene_identifier interacting_gene_identifier

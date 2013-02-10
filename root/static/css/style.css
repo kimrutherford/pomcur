@@ -572,6 +572,10 @@ div.clearall {
   overflow: auto;
 }
 
+#ferret {
+  list-style-type: none;
+}
+
 #ferret-term-entry {
   width: 75%;
   margin-top: 10px;
@@ -693,7 +697,6 @@ div.clearall {
 #ferret-term-children ul li {
   padding: 2px;
   text-decoration: none;
-  list-style-type: none;
 }
 
 #ferret-suggest-link, #ferret-cancel-children {
@@ -818,6 +821,12 @@ span.pomcur-select-buttons {
   float: right;
   margin-top: 10px;
   margin-left: 8px;
+}
+
+.curs-back-button {
+  float: left;
+  margin-top: 10px;
+  margin-right: 8px;
 }
 
 .ui-dialog {
